@@ -1,67 +1,48 @@
-// src/pages/__tests__/login.test.tsx
-import React from "react";
-import { mount } from "enzyme";
-import { MockedProvider } from "@apollo/client/testing";
-import { act } from "react-dom/test-utils";
-import Login from "../login";
+import React from 'react';
 
-// Helper to let Apollo microtasks resolve in jsdom/Jest
-const flushPromises = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+import { renderApollo, cleanup, fireEvent, waitFor } from '../../test-utils';
+import Login, { LOGIN_USER } from '../login';
+import { cache, isLoggedInVar } from '../../cache';
 
-describe("<Login />", () => {
-    it("shows an input for email/username (with Apollo provider)", async () => {
-        const wrapper = mount(
-            <MockedProvider mocks={[]} addTypename={false}>
-                <Login />
-            </MockedProvider>
-        );
+describe('Login Page', () => {
+    // automatically unmount and cleanup DOM after the test is finished.
+    afterEach(cleanup);
 
-        await act(async () => {
-            await flushPromises();
-        });
-        wrapper.update();
-
-        const hasEmailInput =
-            wrapper.find('input[type="email"]').exists() ||
-            wrapper.find('input[name="email"]').exists() ||
-            wrapper.find('input[type="text"]').exists();
-
-        expect(hasEmailInput).toBe(true);
-        wrapper.unmount();
+    it('renders login page', async () => {
+        renderApollo(<Login />);
     });
 
-    it("renders a submit button", async () => {
-        const wrapper = mount(
-            <MockedProvider mocks={[]} addTypename={false}>
-                <Login />
-            </MockedProvider>
-        );
+    it('fires login mutation and updates cache after done', async () => {
+        expect(isLoggedInVar()).toBeFalsy();
 
-        await act(async () => {
-            await flushPromises();
+        const mocks = [
+            {
+                request: { query: LOGIN_USER, variables: { email: 'a@a.a' } },
+                result: {
+                    data: {
+                        login: {
+                            id: 'abc123',
+                            token: 'def456',
+                        },
+                    },
+                },
+            },
+        ];
+
+        const { getByText, getByTestId } = await renderApollo(<Login />, {
+            mocks,
+            cache,
         });
-        wrapper.update();
 
-        const button = wrapper.find("button").first();
-        expect(button.exists()).toBe(true);
-        expect(button.text().toLowerCase()).toMatch(/log\s*in|sign\s*in|submit/);
-
-        wrapper.unmount();
-    });
-
-    it("matches snapshot", async () => {
-        const wrapper = mount(
-            <MockedProvider mocks={[]} addTypename={false}>
-                <Login />
-            </MockedProvider>
-        );
-
-        await act(async () => {
-            await flushPromises();
+        fireEvent.change(getByTestId('login-input'), {
+            target: { value: 'a@a.a' },
         });
-        wrapper.update();
 
-        expect(wrapper).toMatchSnapshot();
-        wrapper.unmount();
+        fireEvent.click(getByText(/log in/i));
+
+        // login is done if loader is gone
+        await waitFor(() => getByText(/log in/i));
+
+        expect(isLoggedInVar()).toBeTruthy();
     });
 });

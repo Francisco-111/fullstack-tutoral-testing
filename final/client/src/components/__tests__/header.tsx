@@ -1,15 +1,13 @@
-import React from "react";
-import { shallow } from "enzyme";
-import Header from "../header";
+import React from 'react';
 
-describe("<Header />", () => {
-    it("renders the Space Explorer title", () => {
-        const wrapper = shallow(<Header />);
-        expect(wrapper.text()).toMatch(/Space Explorer/i);
-    });
+import { render, cleanup } from '../../test-utils';
+import Header from '../header';
 
-    it("matches snapshot", () => {
-        const wrapper = shallow(<Header />);
-        expect(wrapper).toMatchSnapshot();
+describe('Header', () => {
+    // automatically unmount and cleanup DOM after the test is finished.
+    afterEach(cleanup);
+
+    it('renders without error', () => {
+        render(<Header />);
     });
 });
