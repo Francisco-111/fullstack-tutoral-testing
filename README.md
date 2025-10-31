@@ -28,3 +28,8 @@ and
 ```bash
 cd final/client && npm i && npm start
 ```
+Dependencies install
+```bash
+cd final/client then npm install
+cd final/server then npm install 
+```
