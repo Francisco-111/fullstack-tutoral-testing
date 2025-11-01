@@ -12,14 +12,15 @@ cd final/server then npm install
 ```
 
 ```bash
-cd final/server && npm i && npm start
+cd final/server npm start
 ```
 
 and
 
 ```bash
-cd final/client && npm i && npm start
+cd final/client npm start
 ```
+
 
 
 
