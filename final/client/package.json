@@ -23,7 +23,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "run:ios-demo": "npx artillery run apollo-internal-demos/ios-workload.yml",
-    "codegen": "apollo client:codegen --target typescript --watch"
+    "codegen": "apollo client:codegen --target typescript --watch",
+    "e2e": "node src/e2e/run-all.js"
   },
   "eslintConfig": {
     "extends": "react-app"
