@@ -45,8 +45,8 @@ const IS_LOGGED_IN = gql`
 `;
 
 function IsLoggedIn() {
-  const { data } = useQuery(IS_LOGGED_IN);
-  return data.isLoggedIn ? <Pages /> : <Login />;
+    const { data } = useQuery(IS_LOGGED_IN);
+    return data?.isLoggedIn ? <Pages /> : <Login />;
 }
 
 // Find our rootElement or throw and error if it doesn't exist

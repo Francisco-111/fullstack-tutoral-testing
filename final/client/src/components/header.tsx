@@ -13,29 +13,42 @@ const avatars = [dog1, dog2, dog3];
 const maxIndex = avatars.length - 1;
 
 function pickAvatarByEmail(email: string) {
-  const charCode = email.toLowerCase().charCodeAt(0) - offset;
-  const percentile = Math.max(0, Math.min(max, charCode)) / max;
-  return avatars[Math.round(maxIndex * percentile)];
+    const firstChar = (email && email[0]) || 'a';
+    const charCode = firstChar.toLowerCase().charCodeAt(0) - offset;
+    const percentile = Math.max(0, Math.min(max, charCode)) / max;
+    return avatars[Math.round(maxIndex * percentile)];
 }
 
 interface HeaderProps {
-  image?: string | any;
-  children?: any;
+    image?: string | any;
+    children?: any;
 }
 
 const Header: React.FC<HeaderProps> = ({ image, children = 'Space Explorer' }) => {
-  const email = window.atob(localStorage.getItem('token') as string);
-  const avatar = image || pickAvatarByEmail(email);
+    const token = localStorage.getItem('token');
 
-  return (
-    <Container>
-      <Image round={!image} src={avatar} alt="Space dog" />
-      <div>
-        <h2>{children}</h2>
-        <Subheading>{email}</Subheading>
-      </div>
-    </Container>
-  );
+    let email = '';
+
+    if (token) {
+        try {
+            email = window.atob(token);
+        } catch (e) {
+            console.error('Invalid token in localStorage:', token, e);
+            // email stays as empty string
+        }
+    }
+
+    const avatar = image || pickAvatarByEmail(email || 'guest@example.com');
+
+    return (
+        <Container>
+            <Image round={!image} src={avatar} alt="Space dog" />
+            <div>
+                <h2>{children}</h2>
+                {email && <Subheading>{email}</Subheading>}
+            </div>
+        </Container>
+    );
 };
 
 export default Header;
@@ -45,17 +58,17 @@ export default Header;
  */
 
 const Container = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  marginBottom: unit * 4.5,
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: unit * 4.5,
 });
 
 const Image = styled('img')(size(134), (props: { round: boolean }) => ({
-  marginRight: unit * 2.5,
-  borderRadius: props.round ? '50%' : '0%',
+    marginRight: unit * 2.5,
+    borderRadius: props.round ? '50%' : '0%',
 }));
 
 const Subheading = styled('h5')({
-  marginTop: unit / 2,
-  color: colors.textSecondary,
+    marginTop: unit / 2,
+    color: colors.textSecondary,
 });

@@ -6,12 +6,9 @@ import {
   Reference,
 } from '@apollo/client';
 
-import { GET_LAUNCH_DETAILS } from '../pages/launch';
 import Button from '../components/button';
 import { cartItemsVar } from '../cache';
 import * as LaunchDetailTypes from '../pages/__generated__/LaunchDetails';
-
-export { GET_LAUNCH_DETAILS };
 
 export const CANCEL_TRIP = gql`
   mutation cancel($launchId: ID!) {
