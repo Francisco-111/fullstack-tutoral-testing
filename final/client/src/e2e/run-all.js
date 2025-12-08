@@ -7,6 +7,7 @@ const tests = [
     'token_stored.e2e.js',
     'logout_clears_token.e2e.js',
     'direct_access_when_logged_in.e2e.js',
+    'header_navigation.e2e.js',
     'launch_list_has_items.e2e.js',
     'view_launch_detail.e2e.js',
     'back_from_detail.e2e.js',
@@ -23,9 +24,9 @@ const tests = [
     'cart_persists.e2e.js',
     'cart_clears_on_logout.e2e.js',
     'launches_network_error.e2e.js',
-    // *'booking_network_error.e2e.js',
     'invalid_token_header.e2e.js',
     'refresh_during_flows.e2e.js',
+
 ];
 
 for (const file of tests) {
